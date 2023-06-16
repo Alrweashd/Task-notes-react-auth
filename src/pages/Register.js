@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { register } from "../api/auth";
 
 const Register = () => {
   const [userInfo, setUserInfo] = useState({});
-
   const handleChange = (e) => {
     if (e.target.name === "image") {
       setUserInfo({ ...userInfo, [e.target.name]: e.target.files[0] });
@@ -10,10 +11,14 @@ const Register = () => {
       setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
     }
   };
+  const { mutate: RegFun } = useMutation({
+    mutationFn: () => register(userInfo),
+  });
 
   const handleFormSubmit = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     // Add register logic here
+    RegFun();
   };
 
   return (
