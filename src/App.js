@@ -7,11 +7,17 @@ import Register from "./pages/Register";
 import Notes from "./pages/Notes";
 import Note from "./pages/Note";
 import Users from "./pages/Users";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserContext from "./context/UserContext";
+import { checkToken } from "./api/auth";
 
 function App() {
   const [user, setUser] = useState(false);
+
+  useEffect(() => {
+    setUser(checkToken());
+  }, []);
+
   return (
     <UserContext.Provider value={[user, setUser]}>
       <div className="App font-mono ">

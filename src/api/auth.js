@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 const login = async (userInfo) => {
   try {
     const { data } = await instance.post("/auth/login", userInfo);
-
+    storeToken(data.token);
     return data;
   } catch (error) {
     console.log(error);
@@ -16,8 +16,10 @@ const register = async (userInfo) => {
     //to change and accept the image as a binary file
     const formData = new FormData();
     for (const key in userInfo) formData.append(key, userInfo[key]);
-    storeToken(localStorage.getItem("token"));
+    // storeToken(localStorage.getItem("token"));
     const { data } = await instance.post("/auth/register", formData);
+    storeToken(data.token);
+    console.log(data.token);
     return data;
   } catch (error) {
     console.log(error);
@@ -41,12 +43,13 @@ const getAllUsers = async () => {
     console.log(error);
   }
 };
-const storeToken = () => {
-  localStorage.getItem("Token");
+const storeToken = (token) => {
+  localStorage.setItem("token", token);
+  console.log(localStorage.getItem("token"));
 };
 
 const checkToken = () => {
-  const token = localStorage.getItem("Token");
+  const token = localStorage.getItem("token");
   if (token) {
     const decode = jwt_decode(token);
     console.log(token);
@@ -63,4 +66,4 @@ const logout = () => {
   localStorage.removeItem("token");
 };
 
-export { login, register, me, getAllUsers };
+export { login, register, me, getAllUsers, checkToken, logout };

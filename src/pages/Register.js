@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { register } from "../api/auth";
+import UserContext from "../context/UserContext";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({});
+  const [user, setUser] = useContext(UserContext);
   const handleChange = (e) => {
     if (e.target.name === "image") {
       setUserInfo({ ...userInfo, [e.target.name]: e.target.files[0] });
@@ -13,6 +17,12 @@ const Register = () => {
   };
   const { mutate: RegFun } = useMutation({
     mutationFn: () => register(userInfo),
+    onSuccess: () => {
+      if (localStorage.getItem("token")) {
+        setUser(true);
+        navigate("/");
+      }
+    },
   });
 
   const handleFormSubmit = (e) => {
